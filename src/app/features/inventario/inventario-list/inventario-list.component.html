@@ -1,0 +1,110 @@
+<div class="inventory-page">
+  <section class="inventory-header">
+    <div>
+      <h1>Inventario</h1>
+      <p>
+        Gestiona el catalogo completo de la biblioteca. Utiliza los filtros avanzados para localizar
+        recursos especificos o actualizar el estado de la coleccion.
+      </p>
+    </div>
+
+    <a class="add-resource" routerLink="/inventario/nuevo">
+      <span class="material-symbols-outlined">add_circle</span>
+      Anadir Nuevo Recurso
+    </a>
+  </section>
+
+  <section class="filter-bar" aria-label="Filtros de inventario">
+    <label class="filter-group">
+      <span>Autor</span>
+      <select>
+        @for (author of authors; track author) {
+          <option>{{ author }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="filter-group">
+      <span>Genero</span>
+      <select>
+        @for (genre of genres; track genre) {
+          <option>{{ genre }}</option>
+        }
+      </select>
+    </label>
+
+    <div class="filter-group status-group">
+      <span>Estado</span>
+      <div class="status-filters">
+        @for (filter of statusFilters; track filter; let first = $first) {
+          <button type="button" [class.active]="first">{{ filter }}</button>
+        }
+      </div>
+    </div>
+
+    <div class="result-count">
+      Mostrando <strong>128</strong> libros encontrados
+    </div>
+  </section>
+
+  <section class="inventory-grid" aria-label="Libros del inventario">
+    @for (book of books; track book.isbn) {
+      <article class="book-card">
+        <div class="cover-frame">
+          <img
+            [src]="book.coverUrl"
+            [alt]="'Portada de ' + book.title"
+            [class.grayscale]="book.status === 'En Mantenimiento'"
+          >
+          <span
+            class="status-chip"
+            [class.disponible]="book.status === 'Disponible'"
+            [class.prestado]="book.status === 'Prestado'"
+            [class.en-mantenimiento]="book.status === 'En Mantenimiento'"
+          >
+            {{ book.status }}
+          </span>
+        </div>
+
+        <div class="book-body">
+          <h2>{{ book.title }}</h2>
+          <p>{{ book.author }}</p>
+
+          <div class="book-footer">
+            <span>ISBN: {{ book.isbn }}</span>
+            <div class="book-actions">
+              <button type="button" aria-label="Editar libro">
+                <span class="material-symbols-outlined">edit</span>
+              </button>
+              <button class="delete" type="button" aria-label="Eliminar libro">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+    }
+
+    <a class="empty-slot" routerLink="/inventario/nuevo">
+      <span class="empty-icon material-symbols-outlined">add</span>
+      <h2>Anadir Titulo</h2>
+      <p>Registra un nuevo ejemplar en la base de datos.</p>
+    </a>
+  </section>
+
+  <section class="pagination-bar" aria-label="Paginacion de inventario">
+    <p>Viendo <strong>1 - 8</strong> de <strong>128</strong> resultados</p>
+
+    <div class="pagination-actions">
+      <button type="button" aria-label="Pagina anterior">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      @for (page of pages; track page; let first = $first) {
+        <button type="button" [class.active]="first">{{ page }}</button>
+      }
+      <button type="button" aria-label="Pagina siguiente">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+  </section>
+</div>

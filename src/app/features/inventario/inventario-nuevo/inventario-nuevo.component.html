@@ -1,0 +1,176 @@
+<div class="inventory-register-page">
+  <section class="background-content" aria-hidden="true">
+    <div class="page-title-row">
+      <div>
+        <h1>Registro de Inventario - Biblio</h1>
+        <p>Gestion centralizada del catalogo bibliografico y existencias fisicas.</p>
+      </div>
+
+      <div class="search-box">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" placeholder="Buscar por ISBN o Titulo...">
+      </div>
+    </div>
+
+    <div class="background-grid">
+      <article class="recent-collection">
+        <h2>Coleccion Reciente</h2>
+
+        <div class="recent-list">
+          @for (book of recentBooks; track book.isbn) {
+            <div class="recent-row">
+              <div class="recent-main">
+                <div class="book-placeholder"></div>
+                <div>
+                  <strong>{{ book.title }}</strong>
+                  <span>{{ book.author }}</span>
+                </div>
+              </div>
+
+              <span class="recent-isbn">ISBN: {{ book.isbn }}</span>
+              <span class="recent-status" [class.maintenance]="book.status === 'MANTENIMIENTO'">
+                {{ book.status }}
+              </span>
+            </div>
+          }
+        </div>
+      </article>
+
+      <aside class="summary-column">
+        <article class="storage-summary">
+          <h2>Resumen de Almacen</h2>
+          <strong>12,482</strong>
+          <p>Libros registrados en total</p>
+        </article>
+
+        <article class="genre-summary">
+          <h2>Generos mas solicitados</h2>
+          <div class="summary-progress">
+            <div class="summary-row">
+              <span>Ficcion</span>
+              <span>65%</span>
+            </div>
+            <div class="track"><div class="fill fiction"></div></div>
+            <div class="summary-row">
+              <span>Historia</span>
+              <span>22%</span>
+            </div>
+            <div class="track"><div class="fill history"></div></div>
+          </div>
+        </article>
+      </aside>
+    </div>
+  </section>
+
+  <section class="modal-layer" aria-label="Formulario de registro de inventario">
+    <div class="inventory-modal">
+      <header class="modal-header">
+        <div>
+          <h2>Anadir Nuevo Libro</h2>
+          <p>Formulario de Alta - Inventario</p>
+        </div>
+        <a routerLink="/inventario" aria-label="Cerrar formulario">
+          <span class="material-symbols-outlined">close</span>
+        </a>
+      </header>
+
+      <form class="inventory-form" [formGroup]="inventoryForm" (ngSubmit)="save()">
+        <div class="form-grid">
+          <label class="field field-wide">
+            <span>Titulo del Libro</span>
+            <input
+              type="text"
+              formControlName="titulo"
+              placeholder="Ej: El amor en los tiempos del colera"
+              [class.invalid]="isInvalid('titulo')"
+            >
+            @if (isInvalid('titulo')) {
+              <small>El titulo es obligatorio.</small>
+            }
+          </label>
+
+          <label class="field">
+            <span>Autor</span>
+            <input
+              type="text"
+              formControlName="autor"
+              placeholder="Nombre completo"
+              [class.invalid]="isInvalid('autor')"
+            >
+            @if (isInvalid('autor')) {
+              <small>El autor es obligatorio.</small>
+            }
+          </label>
+
+          <label class="field">
+            <span>ISBN</span>
+            <input
+              type="text"
+              formControlName="isbn"
+              placeholder="978-..."
+              [class.invalid]="isInvalid('isbn')"
+            >
+            @if (isInvalid('isbn')) {
+              <small>El ISBN es obligatorio.</small>
+            }
+          </label>
+
+          <label class="field">
+            <span>Genero</span>
+            <select formControlName="genero" [class.invalid]="isInvalid('genero')">
+              <option value="">Seleccionar genero</option>
+              @for (genre of genres; track genre) {
+                <option [value]="genre">{{ genre }}</option>
+              }
+            </select>
+            @if (isInvalid('genero')) {
+              <small>El genero es obligatorio.</small>
+            }
+          </label>
+
+          <fieldset class="field status-field">
+            <legend>Estado</legend>
+            <div class="status-options">
+              <label>
+                <input type="radio" formControlName="estado" value="disponible">
+                <span>
+                  <span class="material-symbols-outlined">check_circle</span>
+                  Disponible
+                </span>
+              </label>
+
+              <label>
+                <input type="radio" formControlName="estado" value="mantenimiento">
+                <span>
+                  <span class="material-symbols-outlined">build</span>
+                  En Mantenimiento
+                </span>
+              </label>
+            </div>
+            @if (isInvalid('estado')) {
+              <small>El estado es obligatorio.</small>
+            }
+          </fieldset>
+
+          <label class="field field-wide">
+            <span>Descripcion</span>
+            <textarea
+              rows="4"
+              formControlName="descripcion"
+              placeholder="Notas editoriales, ubicacion fisica o descripcion del ejemplar"
+              [class.invalid]="isInvalid('descripcion')"
+            ></textarea>
+            @if (isInvalid('descripcion')) {
+              <small>La descripcion es obligatoria.</small>
+            }
+          </label>
+        </div>
+
+        <footer class="modal-actions">
+          <a routerLink="/inventario">Cancelar</a>
+          <button type="submit">Guardar Registro</button>
+        </footer>
+      </form>
+    </div>
+  </section>
+</div>

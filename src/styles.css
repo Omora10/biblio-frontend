@@ -1,0 +1,29 @@
+:root {
+  --color-primary: #24389c;
+  --color-surface: #f9f9fb;
+  --color-surface-low: #f3f3f5;
+  --color-surface-lowest: #ffffff;
+  --color-text: #1a1c1d;
+  --color-muted: #454652;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: Inter, Arial, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}

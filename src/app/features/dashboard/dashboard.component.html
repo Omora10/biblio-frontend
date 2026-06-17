@@ -1,0 +1,179 @@
+<div class="dashboard-page">
+  <section class="hero-section">
+    <div>
+      <h1>Panel de Control</h1>
+      <p>Gestion integral del acervo y circulacion bibliografica.</p>
+    </div>
+
+    <div class="hero-actions">
+      <button class="button button-ghost" type="button">Generar Reporte</button>
+      <button class="button button-primary" type="button">Nuevo Registro</button>
+    </div>
+  </section>
+
+  <section class="metrics-grid" aria-label="Metricas principales">
+    @for (metric of metrics; track metric.label) {
+      <article class="metric-card">
+        <div class="metric-card-top">
+          <span
+            class="material-symbols-outlined icon-badge"
+            [class.primary]="metric.tone === 'primary'"
+            [class.secondary]="metric.tone === 'secondary'"
+            [class.tertiary]="metric.tone === 'tertiary'"
+          >
+            {{ metric.icon }}
+          </span>
+          <span class="metric-badge" [class.alert]="metric.tone === 'secondary'">{{ metric.badge }}</span>
+        </div>
+        <div>
+          <p>{{ metric.label }}</p>
+          <h2>{{ metric.value }}</h2>
+        </div>
+      </article>
+    }
+  </section>
+
+  <section class="middle-grid">
+    <div class="activity-column">
+      <div class="section-heading">
+        <h2>Actividad Reciente</h2>
+        <a href="#">Ver todo el historial</a>
+      </div>
+
+      <div class="activity-list">
+        @for (activity of activities; track activity.title) {
+          <article class="activity-item">
+            <div class="activity-main">
+              @if (activity.imageUrl) {
+                <img class="activity-cover" [src]="activity.imageUrl" alt="Portada de libro">
+              } @else {
+                <div class="activity-icon">
+                  <span class="material-symbols-outlined">{{ activity.icon }}</span>
+                </div>
+              }
+
+              <div>
+                <h3>{{ activity.title }}</h3>
+                <p>
+                  {{ activity.detail }}
+                  @if (activity.actor) {
+                    <span>{{ activity.actor }}</span>
+                  }
+                </p>
+              </div>
+            </div>
+
+            <div class="activity-meta">
+              <strong>{{ activity.time }}</strong>
+              <span>{{ activity.tag }}</span>
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+
+    <aside class="quick-column">
+      <h2>Acciones Rapidas</h2>
+
+      <article class="reserve-card">
+        <div class="reserve-glow"></div>
+        <div class="reserve-content">
+          <span class="material-symbols-outlined reserve-icon">book_2</span>
+          <h3>Copia de Reserva</h3>
+          <p>Pre-registra nuevas adquisiciones en el sistema antes de su procesamiento fisico total.</p>
+
+          <form>
+            <label for="reserve-copy">ISBN / Titulo</label>
+            <input id="reserve-copy" type="text" placeholder="Ej: 978-3-16-148410-0">
+            <button type="button">RESERVAR COPIA</button>
+          </form>
+        </div>
+      </article>
+
+      <article class="system-card">
+        <div class="system-card-header">
+          <h3>Estado del Sistema</h3>
+          <div class="system-status">
+            <span></span>
+            OPERATIVO
+          </div>
+        </div>
+
+        <div class="system-row">
+          <span>Sincronizacion Cloud</span>
+          <strong>100%</strong>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill full"></div>
+        </div>
+
+        <div class="system-row">
+          <span>Base de Datos (PostgreSQL)</span>
+          <strong>Latencia: 12ms</strong>
+        </div>
+      </article>
+    </aside>
+  </section>
+
+  <section class="insights-grid">
+    <article class="insight-card">
+      <div class="insight-title">
+        <span class="material-symbols-outlined error">error</span>
+        <h3>Prestamos Vencidos</h3>
+      </div>
+
+      <div class="overdue-list">
+        @for (loan of overdueLoans; track loan.title) {
+          <div class="overdue-item">
+            <div>
+              <strong>{{ loan.title }}</strong>
+              <span>Usu: {{ loan.user }}</span>
+            </div>
+            <b>{{ loan.delay }}</b>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="insight-card">
+      <div class="insight-title">
+        <span class="material-symbols-outlined tertiary">local_fire_department</span>
+        <h3>Tendencias</h3>
+      </div>
+
+      <div class="trend-list">
+        @for (trend of trends; track trend.label) {
+          <div class="trend-item">
+            <div>
+              <strong>{{ trend.label }}</strong>
+              <span>{{ trend.value }}%</span>
+            </div>
+            <div class="progress-track">
+              <div
+                class="progress-fill"
+                [class.primary]="trend.tone === 'primary'"
+                [class.secondary]="trend.tone === 'secondary'"
+                [class.tertiary]="trend.tone === 'tertiary'"
+                [style.width.%]="trend.value"
+              ></div>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="insight-card system-message">
+      <div>
+        <div class="insight-title">
+          <span class="material-symbols-outlined secondary">info</span>
+          <h3>Aviso del Sistema</h3>
+        </div>
+        <p>
+          Mantenimiento programado para el modulo de inventario el proximo 12 de Octubre a las 23:00 hrs.
+          Los servicios cloud podrian verse interrumpidos.
+        </p>
+      </div>
+      <button type="button">Cerrar Notificacion</button>
+    </article>
+  </section>
+</div>

@@ -1,0 +1,15 @@
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-mark">B</div>
+    <div>
+      <h1>Biblio</h1>
+      <p>Management</p>
+    </div>
+  </div>
+
+  <nav class="nav-list">
+    @for (item of navItems; track item.route) {
+      <a [routerLink]="item.route" routerLinkActive="active">{{ item.label }}</a>
+    }
+  </nav>
+</aside>

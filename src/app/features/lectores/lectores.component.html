@@ -1,0 +1,150 @@
+<div class="readers-page">
+  <section class="readers-header">
+    <div>
+      <h1>Gestion de Lectores - Biblio</h1>
+      <p>Control centralizado de usuarios, suscripciones y actividad de prestamo del archivo digital.</p>
+    </div>
+
+    <div class="header-actions">
+      <label class="search-box">
+        <span class="material-symbols-outlined">search</span>
+        <input type="search" placeholder="Buscar lector...">
+      </label>
+      <button type="button">Filtrar Lista</button>
+    </div>
+  </section>
+
+  <div class="content-grid">
+    <section class="table-shell" aria-label="Tabla de lectores">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>ID Usuario</th>
+            <th>Telefono</th>
+            <th>Estado</th>
+            <th>Ultima Actividad</th>
+            <th class="actions-heading">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (reader of readers; track reader.id) {
+            <tr>
+              <td>
+                <div class="reader-cell">
+                  <img [src]="reader.avatarUrl" [alt]="'Avatar de ' + reader.nombre">
+                  <div>
+                    <strong>{{ reader.nombre }}</strong>
+                    <span>{{ reader.correo }}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="mono">{{ reader.id }}</td>
+              <td>{{ reader.telefono }}</td>
+              <td>
+                <span class="status-chip" [class.inactive]="reader.estado === 'Inactivo'">
+                  {{ reader.estado }}
+                </span>
+              </td>
+              <td class="activity">{{ reader.ultimaActividad }}</td>
+              <td class="row-actions">
+                <button type="button" (click)="editReader(reader)" aria-label="Editar lector">
+                  <span class="material-symbols-outlined">edit</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <aside class="reader-form-card" aria-label="Formulario de lector">
+      <header>
+        <div>
+          <h2>Editar Lector</h2>
+          <p>Modifica los privilegios y datos del archivista.</p>
+        </div>
+        <span class="material-symbols-outlined">close</span>
+      </header>
+
+      <form (submit)="$event.preventDefault(); saveReader()">
+        <label class="field field-wide">
+          <span>Nombre Completo</span>
+          <input
+            name="nombre"
+            type="text"
+            [value]="selectedReader.nombre"
+            (input)="updateSelectedReader('nombre', $any($event.target).value)"
+            required
+          >
+        </label>
+
+        <label class="field">
+          <span>Correo</span>
+          <input
+            name="correo"
+            type="email"
+            [value]="selectedReader.correo"
+            (input)="updateSelectedReader('correo', $any($event.target).value)"
+            required
+          >
+        </label>
+
+        <label class="field">
+          <span>Telefono</span>
+          <input
+            name="telefono"
+            type="tel"
+            [value]="selectedReader.telefono"
+            (input)="updateSelectedReader('telefono', $any($event.target).value)"
+            required
+          >
+        </label>
+
+        <label class="field">
+          <span>Estado</span>
+          <select
+            name="estado"
+            [value]="selectedReader.estado"
+            (change)="updateSelectedReader('estado', $any($event.target).value)"
+            required
+          >
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>ID de Usuario</span>
+          <input name="id" type="text" [value]="selectedReader.id" readonly>
+        </label>
+
+        <div class="state-panel">
+          <div>
+            <strong>Estado del Usuario</strong>
+            <span>El usuario puede acceder al catalogo</span>
+          </div>
+          <label class="switch">
+            <input
+              type="checkbox"
+              [checked]="selectedReader.estado === 'Activo'"
+              (change)="updateSelectedReader('estado', selectedReader.estado === 'Activo' ? 'Inactivo' : 'Activo')"
+            >
+            <span></span>
+          </label>
+        </div>
+
+        <footer class="form-actions">
+          <button class="save" type="submit">
+            <span class="material-symbols-outlined">save</span>
+            Guardar Cambios
+          </button>
+          <button class="deactivate" type="button">
+            <span class="material-symbols-outlined">block</span>
+            Desactivar
+          </button>
+        </footer>
+      </form>
+    </aside>
+  </div>
+</div>

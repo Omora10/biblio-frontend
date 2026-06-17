@@ -1,0 +1,27 @@
+.topbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 16rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0 2rem;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(16px);
+}
+
+input {
+  width: min(28rem, 100%);
+  padding: 0.7rem 1rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: var(--color-surface-low);
+}
+
+.topbar-title {
+  color: #172554;
+  font-weight: 800;
+}
