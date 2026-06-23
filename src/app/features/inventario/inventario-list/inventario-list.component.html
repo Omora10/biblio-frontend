@@ -56,6 +56,7 @@
             [alt]="'Portada de ' + book.title"
             [class.grayscale]="book.status === 'En Mantenimiento'"
           >
+
           <span
             class="status-chip"
             [class.disponible]="book.status === 'Disponible'"
@@ -72,11 +73,21 @@
 
           <div class="book-footer">
             <span>ISBN: {{ book.isbn }}</span>
+
             <div class="book-actions">
-              <button type="button" aria-label="Editar libro">
+              <a
+                [routerLink]="['/inventario/editar', book.id]"
+                aria-label="Editar libro"
+              >
                 <span class="material-symbols-outlined">edit</span>
-              </button>
-              <button class="delete" type="button" aria-label="Eliminar libro">
+              </a>
+
+              <button
+                class="delete"
+                type="button"
+                aria-label="Eliminar libro"
+                (click)="eliminarLibro(book.id)"
+              >
                 <span class="material-symbols-outlined">delete</span>
               </button>
             </div>
@@ -99,9 +110,11 @@
       <button type="button" aria-label="Pagina anterior">
         <span class="material-symbols-outlined">chevron_left</span>
       </button>
+
       @for (page of pages; track page; let first = $first) {
         <button type="button" [class.active]="first">{{ page }}</button>
       }
+
       <button type="button" aria-label="Pagina siguiente">
         <span class="material-symbols-outlined">chevron_right</span>
       </button>

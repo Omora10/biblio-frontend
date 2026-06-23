@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { LibroService } from '../../../core/services/libro.service';
 
 interface BookItem {
+  id: number;
   title: string;
   author: string;
   isbn: string;
@@ -26,6 +27,9 @@ export class InventarioListComponent implements OnInit {
 
   pages = ['1', '2', '3', '...'];
 
+  private readonly placeholderImage =
+    'https://placehold.co/300x450?text=Sin+Portada';
+
   constructor(
     private readonly libroService: LibroService
   ) {}
@@ -40,15 +44,40 @@ export class InventarioListComponent implements OnInit {
         console.log('Libros cargados desde backend:', data);
 
         this.books = data.map((libro) => ({
+          id: libro.id,
           title: libro.titulo,
           author: libro.autor,
           isbn: libro.isbn,
           status: libro.prestado ? 'Prestado' : 'Disponible',
-          coverUrl: 'https://picsum.photos/300/450'
+          coverUrl:
+            libro.imagenUrl && libro.imagenUrl.trim() !== ''
+              ? libro.imagenUrl
+              : this.placeholderImage
         }));
       },
       error: (error) => {
         console.error('Error cargando libros desde backend:', error);
+      }
+    });
+  }
+
+  eliminarLibro(id: number): void {
+    console.log('ID recibido para eliminar:', id);
+
+    const confirmar = confirm('¿Desea eliminar este libro?');
+
+    if (!confirmar) {
+      return;
+    }
+
+    this.libroService.eliminar(id).subscribe({
+      next: () => {
+        console.log('Libro eliminado correctamente');
+
+        this.books = this.books.filter(book => book.id !== id);
+      },
+      error: (error) => {
+        console.error('Error eliminando libro:', error);
       }
     });
   }

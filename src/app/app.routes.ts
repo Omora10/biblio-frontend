@@ -16,15 +16,22 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', component: DashboardComponent },
+
       { path: 'inventario', component: InventarioListComponent },
       { path: 'inventario/nuevo', component: InventarioNuevoComponent },
+      { path: 'inventario/editar/:id', component: InventarioNuevoComponent },
+
       { path: 'prestamos', component: PrestamosListComponent },
       { path: 'prestamos/nuevo', component: PrestamosNuevoComponent },
+
       {
         path: 'lectores',
         loadComponent: () =>
-          import('./features/lectores/lectores.component').then((component) => component.LectoresComponent)
+          import('./features/lectores/lectores.component').then(
+            (component) => component.LectoresComponent
+          )
       },
+
       { path: 'usuarios', component: UsuariosComponent }
     ]
   },

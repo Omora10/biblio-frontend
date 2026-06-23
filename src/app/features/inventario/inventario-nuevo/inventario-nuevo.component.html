@@ -51,6 +51,7 @@
               <span>65%</span>
             </div>
             <div class="track"><div class="fill fiction"></div></div>
+
             <div class="summary-row">
               <span>Historia</span>
               <span>22%</span>
@@ -69,6 +70,7 @@
           <h2>Anadir Nuevo Libro</h2>
           <p>Formulario de Alta - Inventario</p>
         </div>
+
         <a routerLink="/inventario" aria-label="Cerrar formulario">
           <span class="material-symbols-outlined">close</span>
         </a>
@@ -76,6 +78,7 @@
 
       <form class="inventory-form" [formGroup]="inventoryForm" (ngSubmit)="save()">
         <div class="form-grid">
+
           <label class="field field-wide">
             <span>Titulo del Libro</span>
             <input
@@ -84,6 +87,7 @@
               placeholder="Ej: El amor en los tiempos del colera"
               [class.invalid]="isInvalid('titulo')"
             >
+
             @if (isInvalid('titulo')) {
               <small>El titulo es obligatorio.</small>
             }
@@ -97,6 +101,7 @@
               placeholder="Nombre completo"
               [class.invalid]="isInvalid('autor')"
             >
+
             @if (isInvalid('autor')) {
               <small>El autor es obligatorio.</small>
             }
@@ -110,19 +115,34 @@
               placeholder="978-..."
               [class.invalid]="isInvalid('isbn')"
             >
+
             @if (isInvalid('isbn')) {
               <small>El ISBN es obligatorio.</small>
             }
           </label>
 
+          <label class="field field-wide">
+            <span>URL de la Portada</span>
+            <input
+              type="url"
+              formControlName="imagenUrl"
+              placeholder="https://ejemplo.com/portada.jpg"
+            >
+          </label>
+
           <label class="field">
             <span>Genero</span>
-            <select formControlName="genero" [class.invalid]="isInvalid('genero')">
+            <select
+              formControlName="genero"
+              [class.invalid]="isInvalid('genero')"
+            >
               <option value="">Seleccionar genero</option>
+
               @for (genre of genres; track genre) {
                 <option [value]="genre">{{ genre }}</option>
               }
             </select>
+
             @if (isInvalid('genero')) {
               <small>El genero es obligatorio.</small>
             }
@@ -130,9 +150,14 @@
 
           <fieldset class="field status-field">
             <legend>Estado</legend>
+
             <div class="status-options">
               <label>
-                <input type="radio" formControlName="estado" value="disponible">
+                <input
+                  type="radio"
+                  formControlName="estado"
+                  value="disponible"
+                >
                 <span>
                   <span class="material-symbols-outlined">check_circle</span>
                   Disponible
@@ -140,13 +165,18 @@
               </label>
 
               <label>
-                <input type="radio" formControlName="estado" value="mantenimiento">
+                <input
+                  type="radio"
+                  formControlName="estado"
+                  value="mantenimiento"
+                >
                 <span>
                   <span class="material-symbols-outlined">build</span>
                   En Mantenimiento
                 </span>
               </label>
             </div>
+
             @if (isInvalid('estado')) {
               <small>El estado es obligatorio.</small>
             }
@@ -160,10 +190,12 @@
               placeholder="Notas editoriales, ubicacion fisica o descripcion del ejemplar"
               [class.invalid]="isInvalid('descripcion')"
             ></textarea>
+
             @if (isInvalid('descripcion')) {
               <small>La descripcion es obligatoria.</small>
             }
           </label>
+
         </div>
 
         <footer class="modal-actions">

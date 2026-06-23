@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { LibroRequest } from '../../../core/models/libro.model';
+import { LibroService } from '../../../core/services/libro.service';
 
 @Component({
   selector: 'app-inventario-nuevo',
@@ -31,6 +33,7 @@ export class InventarioNuevoComponent {
     titulo: ['', Validators.required],
     autor: ['', Validators.required],
     isbn: ['', Validators.required],
+    imagenUrl: [''],
     genero: ['', Validators.required],
     descripcion: ['', Validators.required],
     estado: ['disponible', Validators.required]
@@ -38,7 +41,10 @@ export class InventarioNuevoComponent {
 
   submitted = false;
 
-  constructor(private readonly formBuilder: FormBuilder) {}
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly libroService: LibroService
+  ) {}
 
   save(): void {
     this.submitted = true;
@@ -48,16 +54,33 @@ export class InventarioNuevoComponent {
       return;
     }
 
-    console.log('Registro de inventario mock', this.inventoryForm.getRawValue());
-    this.inventoryForm.reset({
-      titulo: '',
-      autor: '',
-      isbn: '',
-      genero: '',
-      descripcion: '',
-      estado: 'disponible'
+    const request: LibroRequest = {
+      titulo: this.inventoryForm.getRawValue().titulo,
+      autor: this.inventoryForm.getRawValue().autor,
+      isbn: this.inventoryForm.getRawValue().isbn,
+      imagenUrl: this.inventoryForm.getRawValue().imagenUrl
+    };
+
+    this.libroService.crear(request).subscribe({
+      next: (libro) => {
+        console.log('Libro creado correctamente', libro);
+
+        this.inventoryForm.reset({
+          titulo: '',
+          autor: '',
+          isbn: '',
+          imagenUrl: '',
+          genero: '',
+          descripcion: '',
+          estado: 'disponible'
+        });
+
+        this.submitted = false;
+      },
+      error: (error) => {
+        console.error('Error al crear libro', error);
+      }
     });
-    this.submitted = false;
   }
 
   isInvalid(controlName: keyof typeof this.inventoryForm.controls): boolean {
