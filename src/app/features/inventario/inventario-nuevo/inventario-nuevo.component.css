@@ -461,3 +461,46 @@ small {
     flex-direction: column;
   }
 }
+/* ===============================
+   MENSAJE DE ÉXITO
+================================== */
+
+.success-message {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  color: #166534;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  animation: fadeIn 0.35s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ==========================================
+   MODO EDICIÓN
+========================================== */
+
+.modal-header.edit-mode {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+.modal-header.edit-mode h2 {
+  color: #ffffff;
+}
+
+.modal-header.edit-mode p {
+  color: #dcfce7;
+}

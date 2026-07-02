@@ -21,14 +21,21 @@
             <div class="recent-row">
               <div class="recent-main">
                 <div class="book-placeholder"></div>
+
                 <div>
                   <strong>{{ book.title }}</strong>
                   <span>{{ book.author }}</span>
                 </div>
               </div>
 
-              <span class="recent-isbn">ISBN: {{ book.isbn }}</span>
-              <span class="recent-status" [class.maintenance]="book.status === 'MANTENIMIENTO'">
+              <span class="recent-isbn">
+                ISBN: {{ book.isbn }}
+              </span>
+
+              <span
+                class="recent-status"
+                [class.maintenance]="book.status === 'MANTENIMIENTO'"
+              >
                 {{ book.status }}
               </span>
             </div>
@@ -45,42 +52,73 @@
 
         <article class="genre-summary">
           <h2>Generos mas solicitados</h2>
+
           <div class="summary-progress">
             <div class="summary-row">
               <span>Ficcion</span>
               <span>65%</span>
             </div>
-            <div class="track"><div class="fill fiction"></div></div>
+
+            <div class="track">
+              <div class="fill fiction"></div>
+            </div>
 
             <div class="summary-row">
               <span>Historia</span>
               <span>22%</span>
             </div>
-            <div class="track"><div class="fill history"></div></div>
+
+            <div class="track">
+              <div class="fill history"></div>
+            </div>
           </div>
         </article>
       </aside>
     </div>
   </section>
 
-  <section class="modal-layer" aria-label="Formulario de registro de inventario">
+  <section class="modal-layer">
+
     <div class="inventory-modal">
-      <header class="modal-header">
+
+      <header class="modal-header"[class.edit-mode]="modoEdicion">
+
         <div>
-          <h2>Anadir Nuevo Libro</h2>
-          <p>Formulario de Alta - Inventario</p>
+
+          <h2>
+            {{ modoEdicion ? 'Editar Libro' : 'Anadir Nuevo Libro' }}
+          </h2>
+
+          <p>
+            {{
+              modoEdicion
+                ? 'Actualiza la informacion del libro'
+                : 'Formulario de Alta - Inventario'
+            }}
+          </p>
+
         </div>
 
-        <a routerLink="/inventario" aria-label="Cerrar formulario">
-          <span class="material-symbols-outlined">close</span>
+        <a routerLink="/inventario">
+          <span class="material-symbols-outlined">
+            close
+          </span>
         </a>
+
       </header>
 
-      <form class="inventory-form" [formGroup]="inventoryForm" (ngSubmit)="save()">
+      <form
+        class="inventory-form"
+        [formGroup]="inventoryForm"
+        (ngSubmit)="save()"
+      >
+
         <div class="form-grid">
 
           <label class="field field-wide">
+
             <span>Titulo del Libro</span>
+
             <input
               type="text"
               formControlName="titulo"
@@ -91,10 +129,13 @@
             @if (isInvalid('titulo')) {
               <small>El titulo es obligatorio.</small>
             }
+
           </label>
 
           <label class="field">
+
             <span>Autor</span>
+
             <input
               type="text"
               formControlName="autor"
@@ -105,10 +146,13 @@
             @if (isInvalid('autor')) {
               <small>El autor es obligatorio.</small>
             }
+
           </label>
 
           <label class="field">
+
             <span>ISBN</span>
+
             <input
               type="text"
               formControlName="isbn"
@@ -119,71 +163,106 @@
             @if (isInvalid('isbn')) {
               <small>El ISBN es obligatorio.</small>
             }
+
           </label>
 
           <label class="field field-wide">
+
             <span>URL de la Portada</span>
+
             <input
               type="url"
               formControlName="imagenUrl"
               placeholder="https://ejemplo.com/portada.jpg"
             >
+
           </label>
 
           <label class="field">
+
             <span>Genero</span>
+
             <select
               formControlName="genero"
               [class.invalid]="isInvalid('genero')"
             >
-              <option value="">Seleccionar genero</option>
+
+              <option value="">
+                Seleccionar genero
+              </option>
 
               @for (genre of genres; track genre) {
-                <option [value]="genre">{{ genre }}</option>
+                <option [value]="genre">
+                  {{ genre }}
+                </option>
               }
+
             </select>
 
             @if (isInvalid('genero')) {
               <small>El genero es obligatorio.</small>
             }
+
           </label>
 
           <fieldset class="field status-field">
+
             <legend>Estado</legend>
 
             <div class="status-options">
+
               <label>
+
                 <input
                   type="radio"
                   formControlName="estado"
                   value="disponible"
                 >
+
                 <span>
-                  <span class="material-symbols-outlined">check_circle</span>
+
+                  <span class="material-symbols-outlined">
+                    check_circle
+                  </span>
+
                   Disponible
+
                 </span>
+
               </label>
 
               <label>
+
                 <input
                   type="radio"
                   formControlName="estado"
                   value="mantenimiento"
                 >
+
                 <span>
-                  <span class="material-symbols-outlined">build</span>
+
+                  <span class="material-symbols-outlined">
+                    build
+                  </span>
+
                   En Mantenimiento
+
                 </span>
+
               </label>
+
             </div>
 
             @if (isInvalid('estado')) {
               <small>El estado es obligatorio.</small>
             }
+
           </fieldset>
 
           <label class="field field-wide">
+
             <span>Descripcion</span>
+
             <textarea
               rows="4"
               formControlName="descripcion"
@@ -194,15 +273,33 @@
             @if (isInvalid('descripcion')) {
               <small>La descripcion es obligatoria.</small>
             }
+
           </label>
 
         </div>
 
         <footer class="modal-actions">
-          <a routerLink="/inventario">Cancelar</a>
-          <button type="submit">Guardar Registro</button>
+
+          <a routerLink="/inventario">
+            Cancelar
+          </a>
+
+          <button type="submit">
+
+            {{
+              modoEdicion
+                ? 'Actualizar Libro'
+                : 'Guardar Registro'
+            }}
+
+          </button>
+
         </footer>
+
       </form>
+
     </div>
+
   </section>
+
 </div>

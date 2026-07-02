@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LibroRequest } from '../../../core/models/libro.model';
 import { LibroService } from '../../../core/services/libro.service';
 
@@ -11,7 +11,8 @@ import { LibroService } from '../../../core/services/libro.service';
   templateUrl: './inventario-nuevo.component.html',
   styleUrl: './inventario-nuevo.component.css'
 })
-export class InventarioNuevoComponent {
+export class InventarioNuevoComponent implements OnInit {
+
   genres = ['Ficcion', 'No Ficcion', 'Ciencia', 'Historia', 'Biografia'];
 
   recentBooks = [
@@ -41,12 +42,58 @@ export class InventarioNuevoComponent {
 
   submitted = false;
 
+  modoEdicion = false;
+  libroId = 0;
+
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly libroService: LibroService
+    private readonly libroService: LibroService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
   ) {}
 
-  save(): void {
+  ngOnInit(): void {
+
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (id) {
+
+      this.modoEdicion = true;
+      this.libroId = Number(id);
+
+      console.log('Modo edición');
+      console.log('Libro ID:', this.libroId);
+
+      this.cargarLibro(this.libroId);
+
+    }
+
+  }
+
+  private cargarLibro(id: number): void {
+
+    this.libroService.obtenerPorId(id).subscribe({
+
+      next: (libro) => {
+
+        this.inventoryForm.patchValue({
+          titulo: libro.titulo,
+          autor: libro.autor,
+          isbn: libro.isbn,
+          imagenUrl: libro.imagenUrl
+        });
+
+      },
+
+      error: (error) => {
+        console.error('Error cargando libro', error);
+      }
+
+    });
+
+  }
+    save(): void {
+
     this.submitted = true;
 
     if (this.inventoryForm.invalid) {
@@ -61,30 +108,68 @@ export class InventarioNuevoComponent {
       imagenUrl: this.inventoryForm.getRawValue().imagenUrl
     };
 
-    this.libroService.crear(request).subscribe({
-      next: (libro) => {
-        console.log('Libro creado correctamente', libro);
+    if (this.modoEdicion) {
 
-        this.inventoryForm.reset({
-          titulo: '',
-          autor: '',
-          isbn: '',
-          imagenUrl: '',
-          genero: '',
-          descripcion: '',
-          estado: 'disponible'
-        });
+      this.libroService.actualizar(this.libroId, request).subscribe({
 
-        this.submitted = false;
-      },
-      error: (error) => {
-        console.error('Error al crear libro', error);
-      }
-    });
+        next: (libro) => {
+
+          console.log('Libro actualizado correctamente', libro);
+
+          this.router.navigate(['/inventario']);
+
+        },
+
+        error: (error) => {
+
+          console.error('Error actualizando libro', error);
+
+        }
+
+      });
+
+    } else {
+
+      this.libroService.crear(request).subscribe({
+
+        next: (libro) => {
+
+          console.log('Libro creado correctamente', libro);
+
+          this.inventoryForm.reset({
+            titulo: '',
+            autor: '',
+            isbn: '',
+            imagenUrl: '',
+            genero: '',
+            descripcion: '',
+            estado: 'disponible'
+          });
+
+          this.submitted = false;
+
+          this.router.navigate(['/inventario']);
+
+        },
+
+        error: (error) => {
+
+          console.error('Error al crear libro', error);
+
+        }
+
+      });
+
+    }
+
   }
 
   isInvalid(controlName: keyof typeof this.inventoryForm.controls): boolean {
+
     const control = this.inventoryForm.controls[controlName];
+
     return control.invalid && (control.touched || this.submitted);
+
   }
+
 }
